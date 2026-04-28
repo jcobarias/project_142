@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define MAX_N 20
 #define MAX_K 10
@@ -33,6 +34,7 @@ int find_available_lightest(int bucket_sums[], int count_per_bucket[], int k,
   return index;
 }
 int main() {
+  struct timespec start, end;
   int n, k;
   int set[MAX_N];
   int current_assignment[MAX_N];
@@ -52,6 +54,8 @@ int main() {
   for (int i = 0; i < k; i++)
     bucket_sums[i] = 0;
 
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   qsort(set, n, sizeof(int), descending_compare);
 
   for (int i = 0; i < n; i++) {
@@ -69,11 +73,14 @@ int main() {
     min_fS += (bucket_sums[i] * bucket_sums[i]);
   }
 
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  double time_taken = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+
   printf("Minimum Sum of Square: %lf \n", min_fS);
-  printf("\nAssignment (which bucket each sorted element went to):\n");
   for (int i = 0; i < n; i++) {
     printf("Element %d -> Bucket %d\n", set[i], current_assignment[i]);
   }
+  printf("\nExecution time: %lf seconds\n", time_taken);
 
   return 0;
 }

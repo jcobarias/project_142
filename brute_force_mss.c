@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <time.h>
+
 
 #define MAX_N 20
 #define MAX_K 10
@@ -58,13 +60,19 @@ int main() {
   printf("Enter number of subsets (k): ");
   scanf("%d", &k);
 
+  struct timespec start, end;
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   solve(0, n, k, set, current_assignment);
 
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  double time_taken = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+
   printf("Minimum Sum of Square: %lf \n", min_sum_sq);
-  printf("\nAssignment (which bucket each sorted element went to):\n");
   for (int i = 0; i < n; i++) {
     printf("Element %d -> Bucket %d\n", set[i], min_assignment[i]);
   }
+  printf("\nExecution time: %lf seconds\n", time_taken);
 
   return 0;
 }
