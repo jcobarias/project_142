@@ -1,17 +1,22 @@
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 # generate_charts.py - Generates comparison charts from benchmark_results.csv (No Pandas version)
 
 def generate_charts():
     try:
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        RESULTS_DIR = os.path.join(BASE_DIR, "..", "results")
+        CSV_PATH = os.path.join(RESULTS_DIR, "benchmark_results.csv")
+
         scales = []
         bf_mss, bf_time = [], []
         l_mss, l_time = [], []
         ls_mss, ls_time = [] , []
 
-        with open('benchmark_results.csv', mode='r') as f:
+        with open(CSV_PATH, mode='r') as f:
             reader = csv.DictReader(f)
             for row in reader:
                 scales.append(row['Scale'])
@@ -43,8 +48,9 @@ def generate_charts():
         plt.legend()
         
         plt.tight_layout()
-        plt.savefig('execution_time_chart.png')
-        print("Generated: execution_time_chart.png")
+        output_time = os.path.join(RESULTS_DIR, 'execution_time_chart.png')
+        plt.savefig(output_time)
+        print(f"Generated: {output_time}")
 
         # --- 2. MSS Value Accuracy Chart ---
         plt.figure(figsize=(10, 6))
@@ -64,8 +70,9 @@ def generate_charts():
             plt.text(i - width, val, f'{int(val)}', ha='center', va='bottom', fontsize=8, rotation=45)
         
         plt.tight_layout()
-        plt.savefig('mss_accuracy_chart.png')
-        print("Generated: mss_accuracy_chart.png")
+        output_mss = os.path.join(RESULTS_DIR, 'mss_accuracy_chart.png')
+        plt.savefig(output_mss)
+        print(f"Generated: {output_mss}")
 
     except Exception as e:
         print(f"Error generating charts: {e}")

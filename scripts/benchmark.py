@@ -14,11 +14,15 @@ SCALES = {
     "Large Scale":  {"n": 16, "k": 3}
 }
 
-# Implementation Executables (assumes they are in the same directory)
+# Implementation Executables (relative to this script)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CODE_DIR = os.path.join(BASE_DIR, "..", "code")
+RESULTS_DIR = os.path.join(BASE_DIR, "..", "results")
+
 IMPLEMENTATIONS = {
-    "Brute Force":       "./brute_force.exe",
-    "L-Assignment":      "./l_assignment.exe",
-    "L-Star Assignment": "./l_star_ass.exe"
+    "Brute Force":       os.path.join(CODE_DIR, "brute_force.exe"),
+    "L-Assignment":      os.path.join(CODE_DIR, "l_assignment.exe"),
+    "L-Star Assignment": os.path.join(CODE_DIR, "l_star_ass.exe")
 }
 
 def generate_input(n, k):
@@ -96,7 +100,10 @@ def run_benchmark():
         print(f"{res['Scale']:<15} | {bf:<18} | {la:<18} | {ls:<18}")
 
     # Export to CSV
-    csv_file = "benchmark_results.csv"
+    if not os.path.exists(RESULTS_DIR):
+        os.makedirs(RESULTS_DIR)
+        
+    csv_file = os.path.join(RESULTS_DIR, "benchmark_results.csv")
     fieldnames = [
         "Scale", 
         "BF_MSS", "BF_Time", 
